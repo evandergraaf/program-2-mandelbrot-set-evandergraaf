@@ -81,7 +81,7 @@ public class MandelbrotEngine {
 		//         calculate the maximum value of count and store it in the 
 		//         variable maxCount, which is needed to caluclate the color.
 		
-		}
+
 
 		// set the colors
 		for (int n=0; n < width; n++)
@@ -124,6 +124,7 @@ public class MandelbrotEngine {
 	 *            2 was not exceeded.
 	 */
 	private int iterateComplexNumber(ComplexNumber c) {
+		int count = 0;
         // TO DO - Write the code necessary to calculate the
 		//         value of count that results from the
 		//         iteration scheme specified in the notes.
