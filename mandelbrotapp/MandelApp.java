@@ -8,7 +8,7 @@ import javax.swing.JTextField;
 
 import mandelbrotprocessor.MandelbrotEngine;
 
-import cs.csmath.complexnumber.ComplexNumber;
+import cs.csmath.complexnumber.complexnumber.ComplexNumber;
 import csimage.CSImage;
 import ui.MandelWin;
 
@@ -37,8 +37,8 @@ public class MandelApp {
      * This constructs an instance of the application that contains
      * a image of the correct size.
      * 
-     * @param int The width of the image containing the Mandelbrot set to display.
-     * @param int The height of the image containing the Mandelbrot set to display.
+     * //@param int The width of the image containing the Mandelbrot set to display.
+     * //@param int The height of the image containing the Mandelbrot set to display.
      */
     public MandelApp(int width, int height) {
         mandelbrotSet = this.makeWhiteImage(width, height);
@@ -135,7 +135,7 @@ public class MandelApp {
         // Get the color model to use from the command line
         if (args.length != 1) {
             // The default color model is a discrete 4 color model
-            colorModel = MandelbrotEngine.CONT4;  
+            colorModel = MandelbrotEngine.NEGATIVE;
         }
         else {
             if (args[0].equals("CONT"))
@@ -152,6 +152,9 @@ public class MandelApp {
                 colorModel = MandelbrotEngine.CONT5;
             else if (args[0].equals("LOOKUP256"))
                 colorModel = MandelbrotEngine.LOOKUP256;
+            else if (args[0].equals("NEGATIVE"))
+                colorModel = MandelbrotEngine.NEGATIVE;
+
         }
         
         // Print message for informational purpose

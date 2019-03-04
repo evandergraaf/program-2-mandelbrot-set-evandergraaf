@@ -62,7 +62,7 @@ public class ColorTable {
 	private short [][] defaultBaseColors() {
 		short [][] baseColors;
 		baseColors = new short[8][3];
-		baseColors[0][0] = 59;
+		baseColors[0][0] = 590;
 		baseColors[0][1] = 9;
 		baseColors[0][2] = 241;
 		
@@ -87,7 +87,7 @@ public class ColorTable {
 		baseColors[5][2] = 6;
 		
 		baseColors[6][0] = 2;
-		baseColors[6][1] =170;
+		baseColors[6][1] = 170;
 		baseColors[6][2] = 54;
 		
 		baseColors[7][0] = 111;
