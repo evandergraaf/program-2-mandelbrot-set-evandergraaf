@@ -1,6 +1,6 @@
 package mandelbrotprocessor;
 
-import cs.csmath.complexnumber.ComplexNumber;
+import cs.csmath.complexnumber.complexnumber.ComplexNumber;
 import csimage.CSImage;
 
 /**
@@ -32,7 +32,7 @@ public class MandelbrotEngine {
 	public final static int CONT4 = 4;    // Flag indicating 4 level continuous color generation.
 	public final static int CONT5 = 5;    // Flag indicating 5 level continuous color generation.
 	public final static int LOOKUP256 = 6; // Flag indicating 256 color table lookup.
-		
+	public final static int NEGATIVE = 7; //Flag for negative the colors
     /**
      * Constructs a MandelbrotEngine given the southwest corner of a square region in the
      * complex plane, the length of the sides of the region, and an image to generate the
@@ -76,16 +76,29 @@ public class MandelbrotEngine {
 		//         iterated using Dewdney's iteration formula to determine 
 		//         count.  The iteration should be performed by the 
 		//         method iterateComplexNumber, which is stubbed below.
-		//         Count values shoud be stored in the appropriate row 
+		//         Count values should be stored in the appropriate row
 		//         and column cell in the 2D array countPad and you should 
 		//         calculate the maximum value of count and store it in the 
 		//         variable maxCount, which is needed to caluclate the color.
-		
+		for(int n = 0; n < width; n++){
+			for(int m = 0; m < height; m++){
+				ComplexNumber c = new ComplexNumber();
+				c.setRealPart(this.aCorner.getRealPart() + (n*gap));
+				c.setImagPart(this.aCorner.getImagPart() + (m*gap));
 
+				int count = iterateComplexNumber(c);
+				countPad[n][m] = count;
+
+				if(countPad[n][m] > maxCount && countPad[n][m] < this.MAX_ITERATION){
+					maxCount++;
+				}
+			}
+		}
 
 		// set the colors
 		for (int n=0; n < width; n++)
 			for (int m=0; m < height; m++) {
+				//countPad[n][m] = -1 * countPad[n][m];
 				double ratio = ((double)(countPad[n][m]))/(double)maxCount;
 				ratio = 1.0 - ratio;
 				// get the pixel color
@@ -104,8 +117,12 @@ public class MandelbrotEngine {
 					   pixel = determineColorCont5(countPad[n][m]);
 				else if (colorModel==LOOKUP256)
 					pixel = determineColorTableLookup(countPad[n][m]);
+				else if(colorModel == NEGATIVE)
+					pixel = makeNegative(ratio, countPad[n][m]);
 				this.mandelbrotSet.setPixel(n, (height-1)-m, pixel);
+
 			}
+
 	}
 
 	/**
@@ -130,7 +147,16 @@ public class MandelbrotEngine {
 		//         iteration scheme specified in the notes.
 		
 		// assert: z.abs()>2 or count > MAX_ITERATION
+		ComplexNumber z = new ComplexNumber(0,0);
+		double size = z.abs();
+		while(z.abs() <= 2.0 && count <= MAX_ITERATION) {
+			z.mult(z);
+			z.add(c);
+			count++;
+		}
+
 		return count;
+
 	}
 	
 	/**
@@ -167,7 +193,6 @@ public class MandelbrotEngine {
 		// Note: If the pixel is in the set the color is black
 		int [] retColor = {0, 0, 0};
 		if (count < getMAX_ITERATION()) {
-
 		    retColor[0] = (int)(RED_BASE*ratio); 
 		    retColor[1] = (int)(GREEN_BASE*ratio);
 		    retColor[2] = (int)(BLUE_BASE*ratio); 
@@ -421,4 +446,44 @@ public class MandelbrotEngine {
 			
 		return retColor;
 	}
+	//negative colors
+	private int[] makeNegative(double ratio, int count){
+		//int[] retColor = new int[3];
+		int scaledCount = (int)(count*ratio);
+		int scaledItLimit = COLOR_MAX_3;
+
+		int [] retColor = new int[3];
+		if (count > MAX_ITERATION) {
+			retColor[0] = 0;
+			retColor[1] = 0;
+			retColor[2] = 0;
+		}
+		else {
+			if (scaledCount < 16) {
+				retColor[0] = scaledCount*8;
+				retColor[1] = scaledCount*8;
+				retColor[2] = 128+scaledCount*4;
+			}
+			if (scaledCount >= 16 && scaledCount < 64) {
+				retColor[0] = 128 + scaledCount - 16;
+				retColor[1] = 128 + scaledCount - 16;
+				retColor[2] = 192 + scaledCount - 16;
+			}
+			if (scaledCount >= 64 && scaledCount < 200) {
+				retColor[0] = 185-(int)(0.39*(scaledCount-200));
+				retColor[1] = 161-(int)(0.412*(scaledCount-200));
+				retColor[2] = 19 - (int)(0.51*(scaledCount-200));
+			}
+			if (scaledCount>= 200) {
+				retColor[0] = scaledItLimit-scaledCount-(scaledItLimit - scaledCount)/2;
+				retColor[1] = 128 + (scaledItLimit - scaledCount)/2;
+				retColor[2] = scaledItLimit-scaledCount;
+			}
+		}
+		for(int i = 0; i < 3; i++){
+			retColor[i] = 255 - retColor[i];
+		}
+		return retColor;
+	}
+
 }
