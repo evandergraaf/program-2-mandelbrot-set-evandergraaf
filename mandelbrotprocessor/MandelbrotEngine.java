@@ -7,7 +7,7 @@ import csimage.CSImage;
  * The MandelbrotEngine class provides the facilities to generate an image of 
  * the Mandlebrot set.
  * 
- * @author S. Sigman
+ * @author S. Sigman and Ean Vandergraaf
  * @version v1.0
  */
 public class MandelbrotEngine {
@@ -33,6 +33,7 @@ public class MandelbrotEngine {
 	public final static int CONT5 = 5;    // Flag indicating 5 level continuous color generation.
 	public final static int LOOKUP256 = 6; // Flag indicating 256 color table lookup.
 	public final static int NEGATIVE = 7; //Flag for negative the colors
+	public final static int GREY = 8; // Flag for grey color generation
     /**
      * Constructs a MandelbrotEngine given the southwest corner of a square region in the
      * complex plane, the length of the sides of the region, and an image to generate the
@@ -119,6 +120,8 @@ public class MandelbrotEngine {
 					pixel = determineColorTableLookup(countPad[n][m]);
 				else if(colorModel == NEGATIVE)
 					pixel = makeNegative(ratio, countPad[n][m]);
+				else if(colorModel == GREY)
+					pixel = makeGrey(ratio, countPad[n][m]);
 				this.mandelbrotSet.setPixel(n, (height-1)-m, pixel);
 
 			}
@@ -480,10 +483,65 @@ public class MandelbrotEngine {
 				retColor[2] = scaledItLimit-scaledCount;
 			}
 		}
+		//go through and create negative of the color
+
 		for(int i = 0; i < 3; i++){
 			retColor[i] = 255 - retColor[i];
+		}
+
+		return retColor;
+	}
+	//Black and White (grey)
+	private int[] makeGrey(double ratio, int count){
+		//int[] retColor = new int[3];
+		int scaledCount = (int)(count*ratio);
+		int scaledItLimit = COLOR_MAX_3;
+
+		int [] retColor = new int[3];
+		if (count > MAX_ITERATION) {
+			retColor[0] = 0;
+			retColor[1] = 0;
+			retColor[2] = 0;
+		}
+		else {
+			if (scaledCount < 16) {
+				retColor[0] = scaledCount*8;
+				retColor[1] = scaledCount*8;
+				retColor[2] = 128+scaledCount*4;
+			}
+			if (scaledCount >= 16 && scaledCount < 64) {
+				retColor[0] = 128 + scaledCount - 16;
+				retColor[1] = 128 + scaledCount - 16;
+				retColor[2] = 192 + scaledCount - 16;
+			}
+			if (scaledCount >= 64 && scaledCount < 200) {
+				retColor[0] = 185-(int)(0.39*(scaledCount-200));
+				retColor[1] = 161-(int)(0.412*(scaledCount-200));
+				retColor[2] = 19 - (int)(0.51*(scaledCount-200));
+			}
+			if (scaledCount>= 200) {
+				retColor[0] = scaledItLimit-scaledCount-(scaledItLimit - scaledCount)/2;
+				retColor[1] = 128 + (scaledItLimit - scaledCount)/2;
+				retColor[2] = scaledItLimit-scaledCount;
+			}
+		}
+		//go through and create negative of the color
+		/**
+		 for(int i = 0; i < 3; i++){
+		 retColor[i] = 255 - retColor[i];
+		 }
+		 */
+		int grey = 0;
+		for(int i = 0; i < 3; i++){
+			grey = grey + retColor[i];
+		}
+		grey = grey / 3;
+		for(int i = 0; i < 3; i++){
+			retColor[i] = grey;
 		}
 		return retColor;
 	}
 
 }
+
+

@@ -3,7 +3,7 @@ package mandelbrotprocessor;
 /**
  * ColorTable defines a table of 256 colors that can be used to determind a color.
  * 
- * @author S. Sigman
+ * @author S. Sigman and Ean Vandergraaf
  * @version v1.0
  */
 public class ColorTable {

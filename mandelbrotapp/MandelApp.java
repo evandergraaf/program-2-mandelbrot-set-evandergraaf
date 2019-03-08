@@ -20,7 +20,7 @@ import ui.MandelWin;
  * length of the side specifies the width and height of the rectangle 
  * to be displayed.  
  * 
- * @author Scott Sigman
+ * @author Scott Sigman and Ean Vandergraaf
  * @version v1.0
  */
 public class MandelApp {
@@ -130,8 +130,8 @@ public class MandelApp {
      */
     public static void main(String[] args) {
  
-        int colorModel = 0;  //Color Model to use in the application 
-        
+        int colorModel = 0;  //Color Model to use in the application
+
         // Get the color model to use from the command line
         if (args.length != 1) {
             // The default color model is a discrete 4 color model
@@ -154,6 +154,8 @@ public class MandelApp {
                 colorModel = MandelbrotEngine.LOOKUP256;
             else if (args[0].equals("NEGATIVE"))
                 colorModel = MandelbrotEngine.NEGATIVE;
+            else if (args[0].equals("GREY"))
+                colorModel = MandelbrotEngine.GREY;
 
         }
         
@@ -172,7 +174,7 @@ public class MandelApp {
                 sideTB
         };
         JOptionPane.showMessageDialog(null, inputs, "Enter Square", JOptionPane.PLAIN_MESSAGE);
-        
+    
         // Parse the input complex number
         String [] swCornerStr = (swCornerTB.getText()).split("\\+");
         
