@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="CSLibrary">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../CSLibrary/out/production/CSLibrary" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
